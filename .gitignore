@@ -1,0 +1,19 @@
+# IDE
+/.vscode/
+
+# generated
+/build/
+/dist/
+/tmp/
+/zip/
+
+# dependencies
+/bower_components/
+/node_modules/
+/libs/
+/lib/
+
+# misc
+/npm-debug.log
+/package-lock.json
+.npmrc
