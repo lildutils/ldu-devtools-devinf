@@ -1,0 +1,20 @@
+{
+    "__build.configs__": "",
+    "projectName": "need-to-change",
+    "distFolder": "dist",
+    "__screen.configs__": "",
+    "clearScreenBeforeRun": "true",
+    "printHeaderToScreen": "true",
+    "projectHeaderTitle": "DEV-INF@need-to-change",
+    "__logging.configs__": "",
+    "logLevel": "DEBUG",
+    "logLevels": [
+        "DEBUG",
+        "INFO",
+        "WARN",
+        "ERROR"
+    ],
+    "__zip.configs__": "",
+    "zipInSilent": "false",
+    "zipFolder": "build"
+}
