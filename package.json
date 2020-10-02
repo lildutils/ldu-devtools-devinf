@@ -1,7 +1,7 @@
 {
     "name": "@ldu-devtools/devinf",
     "description": "DEV-INF script files from Developers to Developers",
-    "version": "1.1.0",
+    "version": "1.2.0-SNAPSHOT",
     "author": {
         "name": "LilDworks",
         "email": "info@lildworks.hu"
