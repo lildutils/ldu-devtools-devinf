@@ -1,5 +1,7 @@
 # @ldu-devtools/devinf
 
+DEV-INF scripts means that we have .sh or .bat scripts to help developers everyday work.
+
 ## DEV-INF for Angular projects
 
 ...
@@ -10,7 +12,10 @@
 
 ## DEV-INF for Gulp projects
 
-...
+Gulp DEV-INF scripts created to help developers:
+
+* build their Gulp projects, and create a final package for them
+* publish their Gulp projects to npmjs public registry
 
 ## DEV-INF for Linux OS
 
