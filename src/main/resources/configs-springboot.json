@@ -1,14 +1,21 @@
 {
+    "__build.configs__": "",
+    "buildFolder": "build",
+    "defaultProfile": "prod",
+    "distFolder": "dist",
+    "projectBuildName": "need-to-change",
+    "gradlewInSilent": "true",
+    "skipSSLcertCopy": "true",
     "__screen.configs__": "",
     "clearScreenBeforeRun": "false",
-    "printHeaderToScreen": "true",
-    "__dockerHub.configs__": "",
-    "dockerHubLink": "ndworks/hub-images",
-    "__gradle.configs__": "",
-    "gradlewInSilent": "false",
-    "skipSSLcertCopy": "true",
+    "printHeaderToScreen": "false",
+    "projectHeaderTitle": "SpringBoot DEV-INF Tools",
+    "__publishing.configs__": "",
+    "dockerRootURL": "https://www.docker.com",
+    "dockerRepositoryURL": "https://hub.docker.com/repository/docker",
+    "dockerHubLink": "need-to-change",
     "__logging.configs__": "",
-    "logLevel": "DEBUG",
+    "logLevel": "INFO",
     "logLevels": [
         "DEBUG",
         "INFO",
@@ -16,5 +23,6 @@
         "ERROR"
     ],
     "__zip.configs__": "",
-    "zipInSilent": "false"
+    "zipInSilent": "true",
+    "zipFolder": "zip"
 }

@@ -3,8 +3,8 @@
     "description": "DEV-INF script files from Developers to Developers",
     "version": "1.2.0-SNAPSHOT",
     "author": {
-        "name": "LilDworks",
-        "email": "info@lildworks.hu"
+        "name": "LilDutils",
+        "email": "info@lildutils.hu"
     },
     "license": "MIT",
     "repository": {
@@ -29,13 +29,10 @@
         "__SERVE__": "",
         "__BUILD__": "",
         "build-angular": "gulp build --projectType=angular",
-        "build-docker": "gulp build --projectType=docker",
         "build-gulp": "gulp build --projectType=gulp",
-        "build-linux": "gulp build --projectType=linux",
         "build-phpboot": "gulp build --projectType=phpboot",
         "build-springboot": "gulp build --projectType=springboot",
         "build-vuejs": "gulp build --projectType=vuejs",
-        "build-windows": "gulp build --projectType=windows",
         "__TEST__": "",
         "__ANALYZE__": "",
         "__OTHERS__": ""
