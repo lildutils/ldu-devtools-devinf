@@ -28,11 +28,8 @@
     "scripts": {
         "__SERVE__": "",
         "__BUILD__": "",
-        "build-angular": "gulp build --projectType=angular",
         "build-gulp": "gulp build --projectType=gulp",
-        "build-phpboot": "gulp build --projectType=phpboot",
         "build-springboot": "gulp build --projectType=springboot",
-        "build-vuejs": "gulp build --projectType=vuejs",
         "__TEST__": "",
         "__ANALYZE__": "",
         "__OTHERS__": ""
