@@ -1,20 +1,17 @@
 # @ldu-devtools/devinf
 
+DEV-INF scripts means that we have .sh or .bat scripts to help developers everyday work.
+
 ## DEV-INF for Angular projects
-
-...
-
-## DEV-INF for Docker projects
 
 ...
 
 ## DEV-INF for Gulp projects
 
-...
+Gulp DEV-INF scripts created to help developers:
 
-## DEV-INF for Linux OS
-
-...
+* build their Gulp projects, and create a final package for them
+* publish their Gulp projects to npmjs public registry
 
 ## DEV-INF for PHPBoot projects
 
@@ -25,10 +22,6 @@
 ...
 
 ## DEV-INF for Vue.js projects
-
-...
-
-## DEV-INF for Windows OS
 
 ...
 
@@ -52,7 +45,7 @@ gulp build-${projectType}
 
 ## About
 
-To get more informations about this project, or if you have any question or suggestion, please send an email to [me](mailto:info@lildworks.hu)
+To get more informations about this project, or if you have any question or suggestion, please send an email to [me](mailto:info@lildutils.hu)
 
 ## 
 
