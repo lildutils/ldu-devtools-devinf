@@ -10,7 +10,7 @@
     "projectHeaderTitle": "Gulp DEV-INF Tools",
     "__publishing.configs__": "",
     "npmjsRegistryRootURL": "https://registry.npmjs.org/",
-    "npmjsPackagesRootURL": "https://www.npmjs.com/package",
+    "npmjsPackagesRootURL": "https://www.npmjs.com",
     "__logging.configs__": "",
     "logLevel": "INFO",
     "logLevels": [
