@@ -1,7 +1,7 @@
 {
     "name": "@ldu-devtools/devinf",
     "description": "DEV-INF script files from Developers to Developers",
-    "version": "1.2.0-SNAPSHOT",
+    "version": "1.2.0",
     "author": {
         "name": "LilDutils",
         "email": "info@lildutils.hu"
@@ -28,11 +28,8 @@
     "scripts": {
         "__SERVE__": "",
         "__BUILD__": "",
-        "build-angular": "gulp build --projectType=angular",
         "build-gulp": "gulp build --projectType=gulp",
-        "build-phpboot": "gulp build --projectType=phpboot",
         "build-springboot": "gulp build --projectType=springboot",
-        "build-vuejs": "gulp build --projectType=vuejs",
         "__TEST__": "",
         "__ANALYZE__": "",
         "__OTHERS__": ""

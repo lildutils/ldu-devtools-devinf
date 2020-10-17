@@ -43,6 +43,9 @@ _init() {
         fi
     fi
 
+    npmjsRegistryRootURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').npmjsRegistryRootURL")
+    npmjsPackagesRootURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').npmjsPackagesRootURL")
+
     task=build
 
     _clearScreen
@@ -232,12 +235,14 @@ _buildDist() {
 _publishDist() {
     $logger "logInfo" "npmPublish..."
 
-    $logger "logDebug" "npm registry: https://registry.npmjs.org/"
+    $logger "logDebug" "npm registry: ${npmjsRegistryRootURL}"
     $logger "logDebug" "project: ${projectName}-${projectVersion}"
 
     cd dist/
     npm publish --access public
     cd ..
+
+    $logger "logDebug" " ${npmjsPackagesRootURL}/package/${projectBuildName}"
 
     $logger "logInfo" "npmPublish"
 }
