@@ -1,1 +1,28 @@
-{}
+{
+    "__build.configs__": "",
+    "buildFolder": "build",
+    "defaultProfile": "prod",
+    "distFolder": "dist",
+    "projectBuildName": "need-to-change",
+    "gradlewInSilent": "true",
+    "skipSSLcertCopy": "true",
+    "__screen.configs__": "",
+    "clearScreenBeforeRun": "false",
+    "printHeaderToScreen": "false",
+    "projectHeaderTitle": "SpringBoot DEV-INF Tools",
+    "__publishing.configs__": "",
+    "dockerRootURL": "https://www.docker.com",
+    "dockerRepositoryURL": "https://hub.docker.com/repository/docker",
+    "dockerHubLink": "need-to-change",
+    "__logging.configs__": "",
+    "logLevel": "INFO",
+    "logLevels": [
+        "DEBUG",
+        "INFO",
+        "WARN",
+        "ERROR"
+    ],
+    "__zip.configs__": "",
+    "zipInSilent": "true",
+    "zipFolder": "zip"
+}

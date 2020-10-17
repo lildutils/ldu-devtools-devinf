@@ -24,9 +24,9 @@ main() {
 _init() {
     _healthCheck
 
-    projectName=$(node -p -e "require('${PWD}/DEV-INF/configs.json').projectBuildName")
-    projectVersion=$(node -p -e "require('${PWD}/package.json').version")
-    projectBuildName=$projectName
+    projectName=$(./gradlew -q printProjectName)
+    projectVersion=$(./gradlew -q printProjectVersion)
+    projectBuildName=$(node -p -e "require('${PWD}/DEV-INF/configs.json').projectBuildName")
 
     activeProfile=$1
     defaultProfile=$(node -p -e "require('${PWD}/DEV-INF/configs.json').defaultProfile")
@@ -43,9 +43,6 @@ _init() {
         fi
     fi
 
-    npmjsRegistryRootURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').npmjsRegistryRootURL")
-    npmjsPackagesRootURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').npmjsPackagesRootURL")
-
     task=build
 
     _clearScreen
@@ -59,17 +56,17 @@ _healthCheck() {
         exit 1
     fi
 
-    $checker checkPackageJsonExists
-    if [ "$?" == "1" ]; then
-        exit 1
-    fi
-
     $checker checkNodeInstalled
     if [ "$?" == "1" ]; then
         exit 1
     fi
 
-    $checker checkNpmInstalled
+    $checker checkJavaInstalled
+    if [ "$?" == "1" ]; then
+        exit 1
+    fi
+
+    $checker checkGradlewInstalled
     if [ "$?" == "1" ]; then
         exit 1
     fi
@@ -189,11 +186,23 @@ _validateArgs() {
         fi
     fi
 
+    $logger "logDebug" "check if dist folder exists"
+    distFolder=$(node -p -e "require('${PWD}/DEV-INF/configs.json').distFolder")
+    if [ -z "$distFolder" ]; then
+        $logger "logError" "'dist folder' is required"
+        $logger "logInfo" "validateArgs"
+        $logger "logInfo" "${task}"
+        if [ "$printHeaderToScreen" == "true" ]; then
+            $utils "printFailedFooter"
+        fi
+        exit 1
+    fi
+
     $logger "logDebug" "check if zip folder exists"
     zipFolder=$(node -p -e "require('${PWD}/DEV-INF/configs.json').zipFolder")
     if [ -z "$zipFolder" ]; then
         $logger "logDebug" "creating zip folder for build archives"
-        mkdir $zipFolder
+        $utils "makeZip"
 
         if [ ! -d "$zipFolder" ]; then
             $logger "logError" "'zip folder' is required"
@@ -222,34 +231,54 @@ _cleanDist() {
 }
 
 _buildDist() {
-    $logger "logInfo" "gulpBuild..."
+    $logger "logInfo" "gradleBuild..."
 
     $logger "logDebug" "project: ${projectName}-${projectVersion}"
     $logger "logDebug" "with profile: '${activeProfile}'"
 
-    ./node_modules/.bin/gulp build --activeProfile=${activeProfile}
+    gradlewInSilent=$(node -p -e "require('${PWD}/DEV-INF/configs.json').gradlewInSilent")
+    if [ "$gradlewInSilent" == "true" ]; then
+        ./gradlew build -q
+    else
+        ./gradlew build
+    fi
 
-    $logger "logInfo" "gulpBuild"
+    $logger "logInfo" "gradleBuild"
 }
 
 _publishDist() {
-    $logger "logInfo" "npmPublish..."
+    $logger "logInfo" "gradlePublish..."
 
-    $logger "logDebug" "npm registry: ${npmjsRegistryRootURL}"
+    $logger "logDebug" "maven central: https://search.maven.org/"
     $logger "logDebug" "project: ${projectName}-${projectVersion}"
 
-    cd dist/
-    npm publish --access public
-    cd ..
+    if [ "$gradlewInSilent" == "true" ]; then
+        ./gradlew publish -q
+    else
+        ./gradlew publish
+    fi
 
-    $logger "logDebug" " ${npmjsPackagesRootURL}/package/${projectBuildName}"
-
-    $logger "logInfo" "npmPublish"
+    $logger "logInfo" "gradlePublish"
 }
 
 _copyFiles() {
     $logger "logInfo" "copyFiles..."
-    $logger "logDebug" "np files to copy"
+
+    $logger "logDebug" "copy jar file"
+    $utils "copyFile" "build/libs/${projectName}-${projectVersion}.jar" "dist/${projectBuildName}.jar"
+
+    $logger "logDebug" "copy configuration file"
+    $utils "copyFile" "src/main/resources/application-${activeProfile}.properties" "dist/application.properties"
+
+    $logger "logDebug" "copy SSL cert"
+    skipSSLcertCopy=$(node -p -e "require('${PWD}/DEV-INF/configs.json').skipSSLcertCopy")
+    if [ "$skipSSLcertCopy" == "true" ]; then
+        $logger "logDebug" "copy java SSL cacerts skipped"
+    else
+        $logger "logDebug" "copy Java SSL cacerts"
+        $utils "copyFile" "/etc/ssl/certs/java/cacerts" "dist/cacerts" "true"
+    fi
+
     $logger "logInfo" "copyFiles"
 }
 

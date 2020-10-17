@@ -1,13 +1,18 @@
 {
     "__build.configs__": "",
-    "projectName": "need-to-change",
+    "buildFolder": "build",
+    "defaultProfile": "prod",
     "distFolder": "dist",
+    "projectBuildName": "need-to-change",
     "__screen.configs__": "",
-    "clearScreenBeforeRun": "true",
-    "printHeaderToScreen": "true",
-    "projectHeaderTitle": "DEV-INF@need-to-change",
+    "clearScreenBeforeRun": "false",
+    "printHeaderToScreen": "false",
+    "projectHeaderTitle": "Gulp DEV-INF Tools",
+    "__publishing.configs__": "",
+    "npmjsRegistryRootURL": "https://registry.npmjs.org/",
+    "npmjsPackagesRootURL": "https://www.npmjs.com",
     "__logging.configs__": "",
-    "logLevel": "DEBUG",
+    "logLevel": "INFO",
     "logLevels": [
         "DEBUG",
         "INFO",
@@ -15,6 +20,6 @@
         "ERROR"
     ],
     "__zip.configs__": "",
-    "zipInSilent": "false",
+    "zipInSilent": "true",
     "zipFolder": "build"
 }
