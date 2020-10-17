@@ -6,6 +6,10 @@ DEV-INF scripts means that we have .sh or .bat scripts to help developers everyd
 
 ...
 
+## DEV-INF for DevOps projects
+
+...
+
 ## DEV-INF for Gulp projects
 
 Gulp DEV-INF scripts created to help developers:
