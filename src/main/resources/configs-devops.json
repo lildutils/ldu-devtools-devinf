@@ -1,0 +1,58 @@
+{
+    "__devops.configs__": "",
+    "db": {
+        "networkName": "need-to-change",
+        "containerName": "need-to-change",
+        "name": "need_to_change",
+        "user": "needtochange",
+        "password": "{{password}}",
+        "composeFile": "/need/to/change",
+        "dataFolder": "/need/to/change",
+        "dumpFolder": "/need/to/change",
+        "dumpFileExt": "dump"
+    },
+    "backend": {
+        "networkName": "need-to-change",
+        "api": {
+            "containerName": "need-to-change",
+            "portNumber": -1
+        }
+    },
+    "frontend": {
+        "networkName": "need-to-change",
+        "admin": {
+            "containerName": "need-to-change",
+            "defaultRegion": "hu",
+            "portNumber": -1
+        },
+        "comingsoon": {
+            "containerName": "need-to-change",
+            "defaultRegion": "hu",
+            "version": "COMINGSOON",
+            "portNumber": -1
+        },
+        "landing": {
+            "containerName": "need-to-change",
+            "defaultRegion": "hu",
+            "portNumber": -1
+        }
+    },
+    "__screen.configs__": "",
+    "clearScreenBeforeRun": "false",
+    "printHeaderToScreen": "false",
+    "projectHeaderTitle": "DevOps DEV-INF Tools",
+    "__regions.configs__": "",
+    "regions": [
+        "hu",
+        "en",
+        "de"
+    ],
+    "__logging.configs__": "",
+    "logLevel": "DEBUG",
+    "logLevels": [
+        "DEBUG",
+        "INFO",
+        "WARN",
+        "ERROR"
+    ]
+}

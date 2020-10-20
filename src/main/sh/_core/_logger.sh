@@ -17,6 +17,15 @@ main() {
     if [ -z "$logLevel" ]; then
         logLevel=DEBUG
     fi
+    if [ "$logLevel" == "undefined" ]; then
+        logLevel=DEBUG
+    fi
+    if [ "$logLevel" == "null" ]; then
+        logLevel=DEBUG
+    fi
+    if [ "$logLevel" == "" ]; then
+        logLevel=DEBUG
+    fi
 
     if [ "$logLevel" == "DEBUG" ]; then
         if [ "$1" == "logDebug" ]; then
@@ -79,31 +88,36 @@ main() {
 _logDebug() {
     logMessage=$1
     now=$(date +"%Y-%m-%d %H:%M:%S")
-    $logCMD "[${now}] [DEBUG] ${logMessage}"
+    echo "[${now}] [DEBUG] ${logMessage}"
+    exit 0
 }
 
 _logInfo() {
     logMessage=$1
     now=$(date +"%Y-%m-%d %H:%M:%S")
-    $logCMD "[${now}] [ INFO] ${logMessage}"
+    echo "[${now}] [ INFO] ${logMessage}"
+    exit 0
 }
 
 _logWarn() {
     logMessage=$1
     now=$(date +"%Y-%m-%d %H:%M:%S")
-    $logCMD "[${now}] [ WARN] ${logMessage}"
+    echo "[${now}] [ WARN] ${logMessage}"
+    exit 0
 }
 
 _logError() {
     logMessage=$1
     now=$(date +"%Y-%m-%d %H:%M:%S")
-    $logCMD "[${now}] [ERROR] ${logMessage}"
+    echo "[${now}] [ERROR] ${logMessage}"
+    exit 0
 }
 
 _log() {
     logMessage=$1
     now=$(date +"%Y-%m-%d %H:%M:%S")
-    $logCMD "[${now}] [  LOG] ${logMessage}"
+    echo "[${now}] [  LOG] ${logMessage}"
+    exit 0
 }
 
 ## run
