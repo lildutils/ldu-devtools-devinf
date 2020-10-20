@@ -11,7 +11,7 @@ zipit=${PWD}/DEV-INF/_zipit.sh
 ## main
 
 main() {
-    _init
+    _init "$1"
     _validate
     _deploy
     _exit

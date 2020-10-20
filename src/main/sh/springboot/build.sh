@@ -11,7 +11,7 @@ zipit=${PWD}/DEV-INF/_zipit.sh
 ## main
 
 main() {
-    _init
+    _init "$1" "$2"
     _validate
     _analyze
     _build
@@ -293,4 +293,4 @@ _zipFiles() {
 
 ## run
 
-main "$1"
+main "$1" "$2"

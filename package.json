@@ -33,6 +33,7 @@
         "build-springboot": "gulp build --projectType=springboot",
         "__TEST__": "",
         "__ANALYZE__": "",
-        "__OTHERS__": ""
+        "__OTHERS__": "",
+        "supported-pt-list": "echo 'gulp build --projectType=devops|gulp|springboot'"
     }
 }

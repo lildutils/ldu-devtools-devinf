@@ -1,10 +1,5 @@
 #!/bin/bash
 
-## globals
-
-
-port=83
-
 ## import core scripts
 
 checker=${PWD}/DEV-INF/_checker.sh
@@ -16,7 +11,7 @@ zipit=${PWD}/DEV-INF/_zipit.sh
 ## main
 
 main() {
-    _init
+    _init "$1" "$2"
     _validate
     _run
     _exit
@@ -27,18 +22,29 @@ main() {
 _init() {
     _healthCheck
 
-    network=$(node -p -e "require('${PWD}/DEV-INF/configs.json').network")
-    defaultRegion=$(node -p -e "require('${PWD}/DEV-INF/configs.json').defaultRegion")
-    port=$(node -p -e "require('./configs.json').port")
+    networkName=$(node -p -e "require('${PWD}/DEV-INF/configs.json').frontend.networkName")
+
+    containerName=$(node -p -e "require('${PWD}/DEV-INF/configs.json').frontend.admin.containerName")
+    portNumber=$(node -p -e "require('${PWD}/DEV-INF/configs.json').frontend.admin.portNumber")
 
     version=$1
 
+    defaultRegion=$(node -p -e "require('${PWD}/DEV-INF/configs.json').frontend.admin.defaultRegion")
     region=$2
 
-    task=run_admin
+    task=run-admin
+
+    _clearScreen
+
+    _printHeader
 }
 
 _healthCheck() {
+    $checker checkConfigsJsonExists
+    if [ "$?" == "1" ]; then
+        exit 1
+    fi
+
     $checker checkNodeInstalled
     if [ "$?" == "1" ]; then
         exit 1
@@ -55,8 +61,6 @@ _validate() {
 }
 
 _run() {
-    $logger "logInfo" "${task}..."
-
     $logger "logInfo" "container:stop..."
     sudo docker container kill $containerName-$region
     $logger "logInfo" "container:stop"
@@ -73,21 +77,46 @@ _run() {
     $logger "logInfo" "container:run..."
     sudo docker container run -d \
         --name=$containerName-$region \
-        --network=$network \
-        -p 127.0.0.1:$port:80 \
+        --network=$networkName \
+        -p 127.0.0.1:$portNumber:80 \
         ndworks/hub-images:$containerName-$region-$version
     $logger "logInfo" "container:run"
 
-    $logger "logDebug" "sudo docker logs -f ${containerName}-${region}"
-
-    $logger "logInfo" "${task}"
+    $logger "logDebug" "@see logs: sudo docker logs -f ${containerName}-${region}"
 }
 
 _exit() {
+    _printFooter
+
     exit 0
 }
 
 ## functions
+
+_clearScreen() {
+    clearScreenBeforeRun=$(node -p -e "require('${PWD}/DEV-INF/configs.json').clearScreenBeforeRun")
+    if [ "$clearScreenBeforeRun" == "true" ]; then
+        clear
+    fi
+}
+
+_printHeader() {
+    printHeaderToScreen=$(node -p -e "require('${PWD}/DEV-INF/configs.json').printHeaderToScreen")
+    if [ "$printHeaderToScreen" == "true" ]; then
+        $utils "printHeader"
+    fi
+
+    $logger "logInfo" "${task}..."
+}
+
+_printFooter() {
+    $logger "logInfo" "${task}"
+
+    printHeaderToScreen=$(node -p -e "require('${PWD}/DEV-INF/configs.json').printHeaderToScreen")
+    if [ "$printHeaderToScreen" == "true" ]; then
+        $utils "printSuccessFooter" "${containerName}-${region}-${version}"
+    fi
+}
 
 _validateArgs() {
     $logger "logInfo" "validateArgs..."
@@ -97,6 +126,9 @@ _validateArgs() {
         $logger "logError" "'version' is required"
         $logger "logInfo" "validateArgs"
         $logger "logInfo" "${task}"
+        if [ "$printHeaderToScreen" == "true" ]; then
+            $utils "printFailedFooter"
+        fi
         exit 1
     fi
 
@@ -111,4 +143,4 @@ _validateArgs() {
 
 ## run
 
-main
+main "$1" "$2"
