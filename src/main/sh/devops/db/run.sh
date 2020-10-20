@@ -2,11 +2,11 @@
 
 ## import core scripts
 
-checker=${PWD}/devops/DEV-INF/_checker.sh
-dockerIt=${PWD}/devops/DEV-INF/_dockerIt.sh
-logger=${PWD}/devops/DEV-INF/_logger.sh
-utils=${PWD}/devops/DEV-INF/_utils.sh
-zipit=${PWD}/devops/DEV-INF/_zipit.sh
+checker=${PWD}/DEV-INF/_checker.sh
+dockerIt=${PWD}/DEV-INF/_dockerIt.sh
+logger=${PWD}/DEV-INF/_logger.sh
+utils=${PWD}/DEV-INF/_utils.sh
+zipit=${PWD}/DEV-INF/_zipit.sh
 
 ## main
 
@@ -21,9 +21,26 @@ main() {
 
 _init() {
     _healthCheck
+
+    dockerComposeFile=$(node -p -e "require('${PWD}/DEV-INF/configs.json').db.composeFile")
+
+    dataFolder=$(node -p -e "require('${PWD}/DEV-INF/configs.json').db.dataFolder")
+
+    dumpFolder=$(node -p -e "require('${PWD}/DEV-INF/configs.json').db.dumpFolder")
+
+    task=run-db-start
+
+    _clearScreen
+
+    _printHeader
 }
 
 _healthCheck() {
+    $checker checkConfigsJsonExists
+    if [ "$?" == "1" ]; then
+        exit 1
+    fi
+
     $checker checkNodeInstalled
     if [ "$?" == "1" ]; then
         exit 1
@@ -40,30 +57,55 @@ _validate() {
 }
 
 _run() {
-    sudo docker-compose up -d
+    $logger "logInfo" "docker-compose:up..."
+    sudo docker-compose -f "${dockerComposeFile}" up -d
+    $logger "logInfo" "docker-compose:up"
 }
 
 _exit() {
+    _printFooter
+
     exit 0
 }
 
 ## functions
 
+_clearScreen() {
+    clearScreenBeforeRun=$(node -p -e "require('${PWD}/DEV-INF/configs.json').clearScreenBeforeRun")
+    if [ "$clearScreenBeforeRun" == "true" ]; then
+        clear
+    fi
+}
+
+_printHeader() {
+    printHeaderToScreen=$(node -p -e "require('${PWD}/DEV-INF/configs.json').printHeaderToScreen")
+    if [ "$printHeaderToScreen" == "true" ]; then
+        $utils "printHeader"
+    fi
+
+    $logger "logInfo" "${task}..."
+}
+
+_printFooter() {
+    $logger "logInfo" "${task}"
+
+    printHeaderToScreen=$(node -p -e "require('${PWD}/DEV-INF/configs.json').printHeaderToScreen")
+    if [ "$printHeaderToScreen" == "true" ]; then
+        $utils "printSuccessFooter" "database-server START"
+    fi
+}
+
 _validateArgs() {
     $logger "logInfo" "validateArgs..."
 
-    $logger "logDebug" "validate version"
-    if [ -z "$version" ]; then
-        $logger "logError" "'version' is required"
-        $logger "logInfo" "validateArgs"
-        $logger "logInfo" "${task}"
-        exit 1
+    if [ ! -d "$dataFolder" ]; then
+        $logger "logDebug" "creating data folder"
+        mkdir "$dataFolder"
     fi
 
-    $logger "logDebug" "validate region"
-    if [ -z "$region" ]; then
-        $logger "logDebug" "activate default region: ${defaultRegion}"
-        region=$defaultRegion
+    if [ ! -d "$dumpFolder" ]; then
+        $logger "logDebug" "creating dumps folder"
+        mkdir "$dumpFolder"
     fi
 
     $logger "logInfo" "validateArgs"
