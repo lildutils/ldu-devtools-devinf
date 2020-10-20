@@ -11,7 +11,7 @@ zipit=${PWD}/DEV-INF/_zipit.sh
 ## main
 
 main() {
-    _init
+    _init "$1" "$2"
     _validate
     _analyze
     _build
@@ -28,8 +28,8 @@ _init() {
     projectVersion=$(node -p -e "require('${PWD}/package.json').version")
     projectBuildName=$projectName
 
-    activeProfile=$1
     defaultProfile=$(node -p -e "require('${PWD}/DEV-INF/configs.json').defaultProfile")
+    activeProfile=$1
 
     publishIt=$2
     if [ -z "$publishIt" ]; then
@@ -264,4 +264,4 @@ _zipFiles() {
 
 ## run
 
-main "$1"
+main "$1" "$2"
