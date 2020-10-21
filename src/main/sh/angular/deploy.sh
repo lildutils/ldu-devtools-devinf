@@ -40,17 +40,17 @@ _healthCheck() {
         exit 1
     fi
 
+    $checker checkPackageJsonExists
+    if [ "$?" == "1" ]; then
+        exit 1
+    fi
+
     $checker checkNodeInstalled
     if [ "$?" == "1" ]; then
         exit 1
     fi
 
-    $checker checkJavaInstalled
-    if [ "$?" == "1" ]; then
-        exit 1
-    fi
-
-    $checker checkGradlewInstalled
+    $checker checkNpmInstalled
     if [ "$?" == "1" ]; then
         exit 1
     fi
