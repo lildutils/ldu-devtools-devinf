@@ -34,6 +34,27 @@ SpringBoot DEV-INF scripts created to help developers:
 * **publish** their SpringBoot projects to maven central public registry
 * **deploy** their SpringBoot projects via docker images
 
+## DEV-INF core scripts
+
+Basicly core scripts are created to implement those funcionalities, which can use globaly.
+
+### protected scripts
+
+... which are not individual scripts, only other scripts can runs they
+
+* *_checker.sh*: can check if docker, gradlew, java, node or npm are installed or not
+* *_dockerIt.sh*: can do docker login | build | push tasks
+* *_logger.sh*: created to log every necessary information with configurable logging level
+* *_utils.sh*: contains many useful task, like clean folder, or make folder, etc...
+* *_zipIt.sh*: created to make quick zip packages
+
+### public scripts
+
+... which are individual scripts too, other scripts can runs they, and self runs are working too
+
+* *make-runnable.sh*: give 755 chmod for shell scripts in DEV-INF folder
+* **deploy-ssh.sh**: open an ssh tunnel and run one command which can be configured in configs.json file
+
 ## Development
 
 ### Install
