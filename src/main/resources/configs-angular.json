@@ -1,1 +1,26 @@
-{}
+{
+    "__build.configs__": "",
+    "baseHref": "./",
+    "buildFolder": "build",
+    "defaultProfile": "prod",
+    "distFolder": "dist",
+    "projectBuildName": "need-to-change",
+    "__screen.configs__": "",
+    "clearScreenBeforeRun": "false",
+    "printHeaderToScreen": "false",
+    "projectHeaderTitle": "Gulp DEV-INF Tools",
+    "__publishing.configs__": "",
+    "npmjsRegistryRootURL": "https://registry.npmjs.org/",
+    "npmjsPackagesRootURL": "https://www.npmjs.com",
+    "__logging.configs__": "",
+    "logLevel": "INFO",
+    "logLevels": [
+        "DEBUG",
+        "INFO",
+        "WARN",
+        "ERROR"
+    ],
+    "__zip.configs__": "",
+    "zipInSilent": "true",
+    "zipFolder": "build"
+}
