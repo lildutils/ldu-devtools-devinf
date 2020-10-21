@@ -17,7 +17,7 @@ const gulpConfigs = {
     projectCore: '_core',
     projectType: buildUtils.processArgs().projectType,
     projectTypesAvailable: [
-        'gulp', 'springboot', 'devops'
+        'gulp', 'springboot', 'devops', 'angular'
     ],
     watching: {
         events: 'all',
