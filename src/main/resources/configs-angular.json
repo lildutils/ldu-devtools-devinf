@@ -14,7 +14,12 @@
     "ngBuild": {
         "baseHref": "./",
         "defaultProfile": "prod",
-        "confFile": "src/assets/conf/nginx.conf"
+        "confFile": "src/assets/conf/nginx.conf",
+        "confFileType": "NGINX",
+        "confFileTypes": [
+            "NGINX",
+            "HTACCESS"
+        ]
     },
     "__publish.configs__": "",
     "registry": {
@@ -31,7 +36,7 @@
         "repositoryURL": "https://hub.docker.com/repository/docker",
         "registryURL": "need-to-change"
     },
-    "__deployRemote.configs__": "",
+    "__remote.configs__": "",
     "remote": {
         "sshUser": "needtochange",
         "sshDomain": "need-to.change",
@@ -40,7 +45,7 @@
     },
     "__screen.configs__": "",
     "screen": {
-        "headerTitle": "Angular {{ domain }} @ DEV-INF Tools",
+        "headerTitle": "Angular @ DEV-INF Tools",
         "clearBeforeRun": "false",
         "printHeader": "false"
     },

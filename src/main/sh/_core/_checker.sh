@@ -19,8 +19,8 @@ main() {
         exit 0
     fi
 
-    if [ "$command" == "checkPackageJsonExists" ]; then
-        _checkFileExists "${PWD}/package.json"
+    if [ "$command" == "checkDockerInstalled" ]; then
+        _checkDockerInstalled
         exit 0
     fi
 
@@ -29,13 +29,13 @@ main() {
         exit 0
     fi
 
-    if [ "$command" == "checkDockerInstalled" ]; then
-        _checkDockerInstalled
+    if [ "$command" == "checkGradlewInstalled" ]; then
+        _checkGradlewInstalled
         exit 0
     fi
 
-    if [ "$command" == "checkGradlewInstalled" ]; then
-        _checkGradlewInstalled
+    if [ "$command" == "checkGulpCliInstalled" ]; then
+        _checkGulpCliInstalled
         exit 0
     fi
 
@@ -51,6 +51,11 @@ main() {
 
     if [ "$command" == "checkNpmInstalled" ]; then
         _checkNpmInstalled
+        exit 0
+    fi
+
+    if [ "$command" == "checkPackageJsonExists" ]; then
+        _checkFileExists "${PWD}/package.json"
         exit 0
     fi
 
@@ -105,6 +110,15 @@ _checkGradlewInstalled() {
     fi
 }
 
+_checkGulpCliInstalled() {
+    gulpVersion=$(./node_modules/.bin/gulp -v)
+
+    if [ -z "$gulpVersion" ]; then
+        $logger "logError" "'${PWD}/gradlew' is not installed yet, please install it first"
+        exit 1
+    fi
+}
+
 _checkJavaInstalled() {
     javaVersion=$(java --version)
 
@@ -135,7 +149,7 @@ _checkNpmInstalled() {
 _checkOpenSSHInstalled() {
     sshVersion=$(ssh)
 
-    if [ -z "$npmVersion" ]; then
+    if [ -z "$sshVersion" ]; then
         $logger "logError" "'ssh' is not installed yet, please install it first"
         exit 1
     fi
