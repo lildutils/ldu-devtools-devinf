@@ -1,33 +1,55 @@
 {
+    "__project.configs": "",
+    "project": {
+        "name": "need-to-change",
+        "buildName": "need-to-change",
+        "buildFolder": "build",
+        "distFolder": "dist",
+        "zip": {
+            "outputFolder": "zip",
+            "silentMode": "true"
+        }
+    },
     "__build.configs__": "",
-    "buildFolder": "build",
-    "defaultProfile": "prod",
-    "distFolder": "dist",
-    "projectBuildName": "need-to-change",
-    "gradlewInSilent": "true",
-    "skipSSLcertCopy": "true",
-    "__ssh.configs__": "",
-    "sshUser": "vpsadmin",
-    "sshDomain": "need-to.change",
-    "sshKey": "/need/to/change.ppk",
-    "sshRun": "/need/to/change.sh",
+    "gradleBuild": {
+        "defaultProfile": "prod",
+        "silentMode": "true",
+        "skipSSLcertCopy": "true"
+    },
+    "__publish.configs__": "",
+    "registry": {
+        "mavenCentral": {
+            "rootURL": "https://search.maven.org/",
+            "registryURL": "https://search.maven.org/"
+        }
+    },
+    "__deploy.configs__": "",
+    "dockerHub": {
+        "rootURL": "https://www.docker.com",
+        "repositoryURL": "https://hub.docker.com/repository/docker",
+        "registryURL": "need-to-change"
+    },
+    "__deployRemote.configs__": "",
+    "remote": {
+        "sshUser": "needtochange",
+        "sshDomain": "need-to.change",
+        "sshKey": "/need/to/change.ppk",
+        "sshRun": "/remote/need/to/change.sh"
+    },
     "__screen.configs__": "",
-    "clearScreenBeforeRun": "false",
-    "printHeaderToScreen": "false",
-    "projectHeaderTitle": "SpringBoot DEV-INF Tools",
-    "__publishing.configs__": "",
-    "dockerRootURL": "https://www.docker.com",
-    "dockerRepositoryURL": "https://hub.docker.com/repository/docker",
-    "dockerHubLink": "need-to-change",
-    "__logging.configs__": "",
-    "logLevel": "INFO",
-    "logLevels": [
-        "DEBUG",
-        "INFO",
-        "WARN",
-        "ERROR"
-    ],
-    "__zip.configs__": "",
-    "zipInSilent": "true",
-    "zipFolder": "zip"
+    "screen": {
+        "headerTitle": "SpringBoot @ DEV-INF Tools",
+        "clearBeforeRun": "false",
+        "printHeader": "false"
+    },
+    "__logger.configs__": "",
+    "logger": {
+        "logLevel": "DEBUG",
+        "logLevels": [
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR"
+        ]
+    }
 }

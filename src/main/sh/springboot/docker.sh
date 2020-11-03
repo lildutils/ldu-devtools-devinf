@@ -25,7 +25,7 @@ _init() {
     _healthCheck
 
     projectName=$(node -p -e "require('${PWD}/DEV-INF/configs.json').project.name")
-    packageVersion=$(node -p -e "require('${PWD}/package.json').version")
+    packageVersion=$(./gradlew -q printProjectVersion)
 
     projectVersion=$1
 
@@ -156,7 +156,7 @@ _validateArgs() {
     $logger "logInfo" "validateArgs"
 }
 
-_dockerDist() {
+_deployDist() {
     dockerRootURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').dockerHub.rootURL")
     dockerRepositoryURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').dockerHub.repositoryURL")
     dockerRegistryURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').dockerHub.registryURL")

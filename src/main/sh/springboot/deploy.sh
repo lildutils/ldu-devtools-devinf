@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## import core scripts
+## imports
 
 checker=${PWD}/DEV-INF/_checker.sh
 dockerIt=${PWD}/DEV-INF/_dockerIt.sh
@@ -20,22 +20,34 @@ main() {
 ## tasks
 
 _init() {
+    task=deploy
+
     _healthCheck
 
-    projectName=$(./gradlew -q printProjectName)
-    projectBuildName=$(node -p -e "require('${PWD}/DEV-INF/configs.json').projectBuildName")
+    projectName=$(node -p -e "require('${PWD}/DEV-INF/configs.json').project.name")
+    packageVersion=$(./gradlew -q printProjectVersion)
+
+    sshUser=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshUser")
+    sshDomain=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshDomain")
+    sshKey=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshKey")
+    sshRun=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshRun")
 
     projectVersion=$1
 
-    dockerRootURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').dockerRootURL")
-    dockerRepositoryURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').dockerRepositoryURL")
-    dockerHub=$(node -p -e "require('${PWD}/DEV-INF/configs.json').dockerHubLink")
+    _clearScreen
 
-    task=deploy
+    _printHeader
+
+    $logger "logInfo" "${task}..."
 }
 
 _healthCheck() {
     $checker checkConfigsJsonExists
+    if [ "$?" == "1" ]; then
+        exit 1
+    fi
+
+    $checker checkPackageJsonExists
     if [ "$?" == "1" ]; then
         exit 1
     fi
@@ -45,17 +57,7 @@ _healthCheck() {
         exit 1
     fi
 
-    $checker checkJavaInstalled
-    if [ "$?" == "1" ]; then
-        exit 1
-    fi
-
-    $checker checkGradlewInstalled
-    if [ "$?" == "1" ]; then
-        exit 1
-    fi
-
-    $checker checkDockerInstalled
+    $checker checkOpenSSHInstalled
     if [ "$?" == "1" ]; then
         exit 1
     fi
@@ -66,10 +68,12 @@ _validate() {
 }
 
 _deploy() {
-    _deployDist
+    _deploySSH
 }
 
 _exit() {
+    $logger "logInfo" "${task}"
+
     _printFooter
 
     exit 0
@@ -78,36 +82,32 @@ _exit() {
 ## functions
 
 _clearScreen() {
-    clearScreenBeforeRun=$(node -p -e "require('${PWD}/DEV-INF/configs.json').clearScreenBeforeRun")
+    clearScreenBeforeRun=$(node -p -e "require('${PWD}/DEV-INF/configs.json').screen.clearBeforeRun")
     if [ "$clearScreenBeforeRun" == "true" ]; then
         clear
     fi
 }
 
 _printHeader() {
-    printHeaderToScreen=$(node -p -e "require('${PWD}/DEV-INF/configs.json').printHeaderToScreen")
+    printHeaderToScreen=$(node -p -e "require('${PWD}/DEV-INF/configs.json').screen.printHeader")
     if [ "$printHeaderToScreen" == "true" ]; then
         $utils "printHeader"
     fi
-
-    $logger "logInfo" "${task}..."
 }
 
 _printFooter() {
-    $logger "logInfo" "${task}"
-
-    printHeaderToScreen=$(node -p -e "require('${PWD}/DEV-INF/configs.json').printHeaderToScreen")
+    printHeaderToScreen=$(node -p -e "require('${PWD}/DEV-INF/configs.json').screen.printHeader")
     if [ "$printHeaderToScreen" == "true" ]; then
-        $utils "printSuccessFooter" "${dockerRepositoryURL}/${dockerHub}/tags?name=${projectName}-${projectVersion}"
+        $utils "printSuccessFooter" "${projectName}-${projectVersion}"
     fi
 }
 
 _validateArgs() {
     $logger "logInfo" "validateArgs..."
 
-    $logger "logDebug" "validate projectName"
-    if [ -z "$projectName" ]; then
-        $logger "logError" "'project name' is required"
+    $logger "logDebug" "validate packageVersion"
+    if [ -z "$packageVersion" ]; then
+        $logger "logError" "'package version' is required"
         $logger "logInfo" "validateArgs"
         $logger "logInfo" "${task}"
         if [ "$printHeaderToScreen" == "true" ]; then
@@ -118,8 +118,7 @@ _validateArgs() {
 
     $logger "logDebug" "validate projectVersion"
     if [ -z "$projectVersion" ]; then
-        $logger "logDebug" "activating default version"
-        projectVersion=$(./gradlew -q printProjectVersion)
+        projectVersion=$packageVersion
 
         if [ -z "$projectVersion" ]; then
             $logger "logError" "'project version' is required"
@@ -132,9 +131,9 @@ _validateArgs() {
         fi
     fi
 
-    $logger "logDebug" "validate dockerRootURL"
-    if [ -z "$dockerRootURL" ]; then
-        $logger "logError" "'docker root URL' is required"
+    $logger "logDebug" "validate sshUser"
+    if [ -z "$sshUser" ]; then
+        $logger "logError" "'ssh user' is required"
         $logger "logInfo" "validateArgs"
         $logger "logInfo" "${task}"
         if [ "$printHeaderToScreen" == "true" ]; then
@@ -143,9 +142,9 @@ _validateArgs() {
         exit 1
     fi
 
-    $logger "logDebug" "validate dockerRepositoryURL"
-    if [ -z "$dockerRepositoryURL" ]; then
-        $logger "logError" "'docker repository URL' is required"
+    $logger "logDebug" "validate sshDomain"
+    if [ -z "$sshDomain" ]; then
+        $logger "logError" "'ssh domain' is required"
         $logger "logInfo" "validateArgs"
         $logger "logInfo" "${task}"
         if [ "$printHeaderToScreen" == "true" ]; then
@@ -154,9 +153,9 @@ _validateArgs() {
         exit 1
     fi
 
-    $logger "logDebug" "validate dockerHub"
-    if [ -z "$dockerHub" ]; then
-        $logger "logError" "'docker hub URL' is required"
+    $logger "logDebug" "validate sshKey"
+    if [ -z "$sshKey" ]; then
+        $logger "logError" "'ssh key' is required"
         $logger "logInfo" "validateArgs"
         $logger "logInfo" "${task}"
         if [ "$printHeaderToScreen" == "true" ]; then
@@ -165,10 +164,9 @@ _validateArgs() {
         exit 1
     fi
 
-    $logger "logDebug" "check if dist folder exists"
-    distFolder=$(node -p -e "require('${PWD}/DEV-INF/configs.json').distFolder")
-    if [ -z "$distFolder" ]; then
-        $logger "logError" "'dist folder' is required"
+    $logger "logDebug" "validate sshRun"
+    if [ -z "$sshRun" ]; then
+        $logger "logError" "'ssh run command' is required"
         $logger "logInfo" "validateArgs"
         $logger "logInfo" "${task}"
         if [ "$printHeaderToScreen" == "true" ]; then
@@ -180,20 +178,15 @@ _validateArgs() {
     $logger "logInfo" "validateArgs"
 }
 
-_deployDist() {
-    $logger "logInfo" "dockerIt..."
+_deploySSH() {
+    $logger "logInfo" "deploy:ssh..."
 
-    $logger "logDebug" "docker repository: ${dockerRootURL}/${dockerHub}"
-    $logger "logDebug" "docker image: ${projectName}"
-    $logger "logDebug" "docker tag: ${projectVersion}"
+    $logger "logDebug" "ssh => ${sshUser}@${sshDomain}"
+    $logger "logDebug" "run: ${sshRun} '${projectVersion}' && exit"
 
-    $dockerit "login"
+    ssh -t -i $sshKey $sshUser@$sshDomain "${sshRun} '${projectVersion}' && exit"
 
-    $dockerit "build" "$dockerHub:$projectName-$projectVersion"
-
-    $dockerit "push" "$dockerHub:$projectName-$projectVersion"
-
-    $logger "logInfo" "dockerIt"
+    $logger "logInfo" "deploy:ssh"
 }
 
 ## run
