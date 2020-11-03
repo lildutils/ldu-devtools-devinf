@@ -17,7 +17,10 @@ const gulpConfigs = {
     projectCore: '_core',
     projectType: buildUtils.processArgs().projectType,
     projectTypesAvailable: [
-        'gulp', 'springboot', 'devops', 'angular'
+        'gulp',
+        'springboot',
+        'devops/db/docker/mysql', 'devops/domain/docker/nginx',
+        'angular'
     ],
     watching: {
         events: 'all',

@@ -13,7 +13,7 @@ zipit=${PWD}/DEV-INF/_zipit.sh
 main() {
     _init "$1"
     _validate
-    _dockerIt
+    _run
     _exit
 }
 
@@ -67,7 +67,7 @@ _validate() {
     _validateArgs
 }
 
-_dockerIt() {
+_run() {
     _dockerDist
 }
 
