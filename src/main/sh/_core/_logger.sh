@@ -1,19 +1,23 @@
 #!/bin/bash
 
+## imports
+
 ## main
 
 main() {
-    if [ -z "$1" ]; then
+    logMethod=$1
+    if [ -z "$logMethod" ]; then
         echo "'log method' is required"
         exit 1
     fi
 
-    if [ -z "$2" ]; then
+    logMessage=$2
+    if [ -z "$logMessage" ]; then
         echo "'log message' is required"
         exit 1
     fi
 
-    logLevel=$(node -p -e "require('${PWD}/DEV-INF/configs.json').logLevel")
+    logLevel=$(node -p -e "require('${PWD}/DEV-INF/configs.json').logger.logLevel")
     if [ -z "$logLevel" ]; then
         logLevel=DEBUG
     fi
@@ -27,59 +31,60 @@ main() {
         logLevel=DEBUG
     fi
 
+    # process
+
     if [ "$logLevel" == "DEBUG" ]; then
-        if [ "$1" == "logDebug" ]; then
-            _logDebug "$2"
+        if [ "$logMethod" == "logDebug" ]; then
+            _logDebug "$logMessage"
             exit 0
         fi
-        if [ "$1" == "logInfo" ]; then
-            _logInfo "$2"
+        if [ "$logMethod" == "logInfo" ]; then
+            _logInfo "$logMessage"
             exit 0
         fi
-        if [ "$1" == "logWarn" ]; then
-            _logWarn "$2"
+        if [ "$logMethod" == "logWarn" ]; then
+            _logWarn "$logMessage"
             exit 0
         fi
-        if [ "$1" == "logError" ]; then
-            _logError "$2"
+        if [ "$logMethod" == "logError" ]; then
+            _logError "$logMessage"
             exit 0
         fi
     fi
 
     if [ "$logLevel" == "INFO" ]; then
-        if [ "$1" == "logInfo" ]; then
-            _logInfo "$2"
+        if [ "$logMethod" == "logInfo" ]; then
+            _logInfo "$logMessage"
             exit 0
         fi
-        if [ "$1" == "logWarn" ]; then
-            _logWarn "$2"
+        if [ "$logMethod" == "logWarn" ]; then
+            _logWarn "$logMessage"
             exit 0
         fi
-        if [ "$1" == "logError" ]; then
-            _logError "$2"
+        if [ "$logMethod" == "logError" ]; then
+            _logError "$logMessage"
             exit 0
         fi
     fi
 
     if [ "$logLevel" == "WARN" ]; then
-        if [ "$1" == "logWarn" ]; then
-            _logWarn "$2"
+        if [ "$logMethod" == "logWarn" ]; then
+            _logWarn "$logMessage"
             exit 0
         fi
-        if [ "$1" == "logError" ]; then
-            _logError "$2"
+        if [ "$logMethod" == "logError" ]; then
+            _logError "$logMessage"
             exit 0
         fi
     fi
 
     if [ "$logLevel" == "ERROR" ]; then
-        if [ "$1" == "logError" ]; then
-            _logError "$2"
+        if [ "$logMethod" == "logError" ]; then
+            _logError "$logMessage"
             exit 0
         fi
     fi
 
-    _log "$2"
     exit 0
 }
 
@@ -87,37 +92,33 @@ main() {
 
 _logDebug() {
     logMessage=$1
-    now=$(date +"%Y-%m-%d %H:%M:%S")
-    echo "[${now}] [DEBUG] ${logMessage}"
-    exit 0
+    logLevel=DEBUG
+    _log "$logMessage" "$logLevel"
 }
 
 _logInfo() {
     logMessage=$1
-    now=$(date +"%Y-%m-%d %H:%M:%S")
-    echo "[${now}] [ INFO] ${logMessage}"
-    exit 0
+    logLevel=INFO
+    _log "$logMessage" " $logLevel"
 }
 
 _logWarn() {
     logMessage=$1
-    now=$(date +"%Y-%m-%d %H:%M:%S")
-    echo "[${now}] [ WARN] ${logMessage}"
-    exit 0
+    logLevel=WARN
+    _log "$logMessage" " $logLevel"
 }
 
 _logError() {
     logMessage=$1
-    now=$(date +"%Y-%m-%d %H:%M:%S")
-    echo "[${now}] [ERROR] ${logMessage}"
-    exit 0
+    logLevel=ERROR
+    _log "$logMessage" "$logLevel"
 }
 
 _log() {
     logMessage=$1
+    logLevel=$2
     now=$(date +"%Y-%m-%d %H:%M:%S")
-    echo "[${now}] [  LOG] ${logMessage}"
-    exit 0
+    echo "[${now}] [${logLevel}] ${logMessage}"
 }
 
 ## run

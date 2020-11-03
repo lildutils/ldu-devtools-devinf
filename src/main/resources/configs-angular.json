@@ -1,31 +1,62 @@
 {
+    "__project.configs": "",
+    "project": {
+        "name": "need-to-change",
+        "buildFolder": "build",
+        "distFolder": "dist",
+        "confFolder": "dist/conf",
+        "zip": {
+            "outputFolder": "zip",
+            "silentMode": "true"
+        }
+    },
     "__build.configs__": "",
-    "baseHref": "./",
-    "buildFolder": "build",
-    "defaultProfile": "prod",
-    "distFolder": "dist",
-    "projectBuildName": "need-to-change",
-    "__ssh.configs__": "",
-    "sshUser": "vpsadmin",
-    "sshDomain": "need-to.change",
-    "sshKey": "/need/to/change.ppk",
-    "sshRun": "/need/to/change.sh",
+    "ngBuild": {
+        "baseHref": "./",
+        "defaultProfile": "prod",
+        "confFile": "src/assets/conf/nginx.conf",
+        "confFileType": "NGINX",
+        "confFileTypes": [
+            "NGINX",
+            "HTACCESS"
+        ]
+    },
+    "__publish.configs__": "",
+    "registry": {
+        "npmjs": {
+            "rootURL": "https://www.npmjs.com",
+            "registryURL": "https://registry.npmjs.org/"
+        }
+    },
+    "__deploy.configs__": "",
+    "dockerHub": {
+        "username": "needtochange",
+        "password": "n33dT0Ch4nGe%",
+        "rootURL": "https://www.docker.com",
+        "repositoryURL": "https://hub.docker.com/repository/docker",
+        "registryURL": "need-to-change"
+    },
+    "__remote.configs__": "",
+    "remote": {
+        "sshUser": "needtochange",
+        "sshDomain": "need-to.change",
+        "sshKey": "/need/to/change.ppk",
+        "sshRun": "/remote/need/to/change.sh"
+    },
     "__screen.configs__": "",
-    "clearScreenBeforeRun": "false",
-    "printHeaderToScreen": "false",
-    "projectHeaderTitle": "Gulp DEV-INF Tools",
-    "__publishing.configs__": "",
-    "npmjsRegistryRootURL": "https://registry.npmjs.org/",
-    "npmjsPackagesRootURL": "https://www.npmjs.com",
-    "__logging.configs__": "",
-    "logLevel": "INFO",
-    "logLevels": [
-        "DEBUG",
-        "INFO",
-        "WARN",
-        "ERROR"
-    ],
-    "__zip.configs__": "",
-    "zipInSilent": "true",
-    "zipFolder": "build"
+    "screen": {
+        "headerTitle": "Angular @ DEV-INF Tools",
+        "clearBeforeRun": "false",
+        "printHeader": "false"
+    },
+    "__logger.configs__": "",
+    "logger": {
+        "logLevel": "DEBUG",
+        "logLevels": [
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR"
+        ]
+    }
 }

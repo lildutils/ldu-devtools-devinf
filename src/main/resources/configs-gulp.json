@@ -1,25 +1,46 @@
 {
+    "__project.configs": "",
+    "project": {
+        "name": "need-to-change",
+        "buildFolder": "build",
+        "distFolder": "dist",
+        "confFolder": "dist/conf",
+        "zip": {
+            "outputFolder": "build",
+            "silentMode": "true"
+        }
+    },
     "__build.configs__": "",
-    "buildFolder": "build",
-    "defaultProfile": "prod",
-    "distFolder": "dist",
-    "projectBuildName": "need-to-change",
+    "gulpBuild": {
+        "defaultProfile": "prod",
+        "confFile": "src/assets/conf/nginx.conf",
+        "confFileType": "NGINX",
+        "confFileTypes": [
+            "NGINX",
+            "HTACCESS"
+        ]
+    },
+    "__publish.configs__": "",
+    "registry": {
+        "npmjs": {
+            "rootURL": "https://www.npmjs.com",
+            "registryURL": "https://registry.npmjs.org/"
+        }
+    },
     "__screen.configs__": "",
-    "clearScreenBeforeRun": "false",
-    "printHeaderToScreen": "false",
-    "projectHeaderTitle": "Gulp DEV-INF Tools",
-    "__publishing.configs__": "",
-    "npmjsRegistryRootURL": "https://registry.npmjs.org/",
-    "npmjsPackagesRootURL": "https://www.npmjs.com",
-    "__logging.configs__": "",
-    "logLevel": "INFO",
-    "logLevels": [
-        "DEBUG",
-        "INFO",
-        "WARN",
-        "ERROR"
-    ],
-    "__zip.configs__": "",
-    "zipInSilent": "true",
-    "zipFolder": "build"
+    "screen": {
+        "headerTitle": "Gulp @ DEV-INF Tools",
+        "clearBeforeRun": "false",
+        "printHeader": "false"
+    },
+    "__logger.configs__": "",
+    "logger": {
+        "logLevel": "DEBUG",
+        "logLevels": [
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR"
+        ]
+    }
 }

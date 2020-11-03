@@ -2,45 +2,21 @@
 
 DEV-INF scripts means that we can use .sh or .bat script files to help the developers everyday's work.
 
-## DEV-INF for Angular projects
+## How to make DEV-INF scripts runnable
 
-Angular DEV-INF scripts created to help developers:
+*(on Windows OS)*
 
-* **build** their Angular projects, and create a final package for them
-* **publish** their Angular projects to npmjs public registry
+...just allow the script run, if pops up
 
-## DEV-INF for DevOps projects
+*(on Linux OS)*
 
-DevOps DEV-INF scripts created to help developers:
-
-* running **db** container modules, with docker-compose up | down
-* running **admin** container modules, with docker image updates
-* running **api** container modules, with docker image updates
-* running **comingsoon** container modules, with docker image updates
-* running **landing** container modules, with docker image updates
-
-## DEV-INF for Gulp projects
-
-Gulp DEV-INF scripts created to help developers:
-
-* **build** their Gulp projects, and create a final package for them
-* **publish** their Gulp projects to npmjs public registry
-
-## DEV-INF for SpringBoot projects
-
-SpringBoot DEV-INF scripts created to help developers:
-
-* **build** their SpringBoot projects, and create a final package for them
-* **publish** their SpringBoot projects to maven central public registry
-* **deploy** their SpringBoot projects via docker images
+``` sh
+sudo chmod -R 755 ${PWD}/DEV-INF/*.sh
+```
 
 ## DEV-INF core scripts
 
 Basicly core scripts are created to implement those funcionalities, which can use globaly.
-
-### protected scripts
-
-... which are not individual scripts, only other scripts can runs they
 
 * *_checker.sh*: can check if docker, gradlew, java, node or npm are installed or not
 * *_dockerIt.sh*: can do docker login | build | push tasks
@@ -48,12 +24,50 @@ Basicly core scripts are created to implement those funcionalities, which can us
 * *_utils.sh*: contains many useful task, like clean folder, or make folder, etc...
 * *_zipIt.sh*: created to make quick zip packages
 
-### public scripts
+## DEV-INF for Angular projects
 
-... which are individual scripts too, other scripts can runs they, and self runs are working too
+Angular DEV-INF scripts created to help developers:
 
-* *make-runnable.sh*: give 755 chmod for shell scripts in DEV-INF folder
-* **deploy-ssh.sh**: open an ssh tunnel and run one command which can be configured in configs.json file
+* *build*: their Angular projects, and create a final package for them
+* *publish*: their Gulp projects to npmjs public registry with --publish arg
+* *docker*: their Angular projects via docker images
+* *deploy*: open an ssh tunnel and run one command which can be configured
+
+## DEV-INF for DevOps/Database projects
+
+DevOps DEV-INF scripts created to help developers:
+
+* *running*: database server container modules, with docker-compose up
+* *stopping*: database servercontainer modules, with docker-compose down
+* *backup*: database via container exec
+* *restore*: database via container exec
+* *cron*: set cron backup for database via backup script
+
+## DEV-INF for DevOps/Domain projects
+
+DevOps DEV-INF scripts created to help developers:
+
+* *admin*: container modules, with docker image updates
+* *api*: container modules, with docker image updates
+* *comingsoon*: container modules, with docker image updates
+* *landing*: container modules, with docker image updates
+
+## DEV-INF for Gulp projects
+
+Gulp DEV-INF scripts created to help developers:
+
+* *build* their Gulp projects, and create a final package for them
+* *publish* their Gulp projects to npmjs public registry with --publish arg
+
+## DEV-INF for SpringBoot projects
+
+SpringBoot DEV-INF scripts created to help developers:
+
+* *build*: their SpringBoot projects, and create a final package for them
+* *publish*: their SpringBoot projects to maven central public registry with --publish arg
+* *docker*: their SpringBoot projects via docker images
+* *deploy*: open an ssh tunnel and run one command which can be configured in configs.json file
+* *cacerts*: fila path are under (for Java) -> /etc/ssl/certs/java/cacerts"
 
 ## Development
 

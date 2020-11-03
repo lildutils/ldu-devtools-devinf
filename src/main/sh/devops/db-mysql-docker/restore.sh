@@ -11,7 +11,7 @@ zipit=${PWD}/DEV-INF/_zipit.sh
 ## main
 
 main() {
-    _init "$1"
+    _init "$1" "$2"
     _validate
     _run
     _exit
@@ -20,19 +20,19 @@ main() {
 ## tasks
 
 _init() {
-    task=deploy
+    task=db-restore
 
     _healthCheck
 
-    projectName=$(node -p -e "require('${PWD}/DEV-INF/configs.json').project.name")
-    packageVersion=$(./gradlew -q printProjectVersion)
+    containerName=$(node -p -e "require('${PWD}/DEV-INF/configs.json').database.server.containerName")
 
-    sshUser=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshUser")
-    sshDomain=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshDomain")
-    sshKey=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshKey")
-    sshRun=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshRun")
+    defaultDatabaseName=$(node -p -e "require('${PWD}/DEV-INF/configs.json').database.connection.databaseName")
+    databaseUser=$(node -p -e "require('${PWD}/DEV-INF/configs.json').database.connection.username")
+    databasePassword=$(node -p -e "require('${PWD}/DEV-INF/configs.json').database.connection.password")
 
-    projectVersion=$1
+    databaseName=$1
+
+    databaseDump=$2
 
     _clearScreen
 
@@ -47,17 +47,12 @@ _healthCheck() {
         exit 1
     fi
 
-    $checker checkPackageJsonExists
-    if [ "$?" == "1" ]; then
-        exit 1
-    fi
-
     $checker checkNodeInstalled
     if [ "$?" == "1" ]; then
         exit 1
     fi
 
-    $checker checkOpenSSHInstalled
+    $checker checkDockerInstalled
     if [ "$?" == "1" ]; then
         exit 1
     fi
@@ -68,7 +63,7 @@ _validate() {
 }
 
 _run() {
-    _deploySSH
+    _restoreIt
 }
 
 _exit() {
@@ -98,16 +93,16 @@ _printHeader() {
 _printFooter() {
     printHeaderToScreen=$(node -p -e "require('${PWD}/DEV-INF/configs.json').screen.printHeader")
     if [ "$printHeaderToScreen" == "true" ]; then
-        $utils "printSuccessFooter" "${projectName}-${projectVersion}"
+        $utils "printSuccessFooter" "${databaseName} restored"
     fi
 }
 
 _validateArgs() {
     $logger "logInfo" "validateArgs..."
 
-    $logger "logDebug" "validate packageVersion"
-    if [ -z "$packageVersion" ]; then
-        $logger "logError" "'package version' is required"
+    $logger "logDebug" "validate containerName"
+    if [ -z "$containerName" ]; then
+        $logger "logError" "'container name' is required"
         $logger "logInfo" "validateArgs"
         $logger "logInfo" "${task}"
         if [ "$printHeaderToScreen" == "true" ]; then
@@ -116,12 +111,45 @@ _validateArgs() {
         exit 1
     fi
 
-    $logger "logDebug" "validate projectVersion"
-    if [ -z "$projectVersion" ]; then
-        projectVersion=$packageVersion
+    $logger "logDebug" "validate defaultDatabaseName"
+    if [ -z "$defaultDatabaseName" ]; then
+        $logger "logError" "'default db name' is required"
+        $logger "logInfo" "validateArgs"
+        $logger "logInfo" "${task}"
+        if [ "$printHeaderToScreen" == "true" ]; then
+            $utils "printFailedFooter"
+        fi
+        exit 1
+    fi
 
-        if [ -z "$projectVersion" ]; then
-            $logger "logError" "'project version' is required"
+    $logger "logDebug" "validate databaseUser"
+    if [ -z "$databaseUser" ]; then
+        $logger "logError" "'db user' is required"
+        $logger "logInfo" "validateArgs"
+        $logger "logInfo" "${task}"
+        if [ "$printHeaderToScreen" == "true" ]; then
+            $utils "printFailedFooter"
+        fi
+        exit 1
+    fi
+
+    $logger "logDebug" "validate databasePassword"
+    if [ -z "$databasePassword" ]; then
+        $logger "logError" "'db passw' is required"
+        $logger "logInfo" "validateArgs"
+        $logger "logInfo" "${task}"
+        if [ "$printHeaderToScreen" == "true" ]; then
+            $utils "printFailedFooter"
+        fi
+        exit 1
+    fi
+
+    $logger "logDebug" "validate databaseName"
+    if [ -z "$databaseName" ]; then
+        databaseName=$defaultDatabaseName
+
+        if [ -z "$databaseName" ]; then
+            $logger "logError" "'db name' is required"
             $logger "logInfo" "validateArgs"
             $logger "logInfo" "${task}"
             if [ "$printHeaderToScreen" == "true" ]; then
@@ -131,42 +159,9 @@ _validateArgs() {
         fi
     fi
 
-    $logger "logDebug" "validate sshUser"
-    if [ -z "$sshUser" ]; then
-        $logger "logError" "'ssh user' is required"
-        $logger "logInfo" "validateArgs"
-        $logger "logInfo" "${task}"
-        if [ "$printHeaderToScreen" == "true" ]; then
-            $utils "printFailedFooter"
-        fi
-        exit 1
-    fi
-
-    $logger "logDebug" "validate sshDomain"
-    if [ -z "$sshDomain" ]; then
-        $logger "logError" "'ssh domain' is required"
-        $logger "logInfo" "validateArgs"
-        $logger "logInfo" "${task}"
-        if [ "$printHeaderToScreen" == "true" ]; then
-            $utils "printFailedFooter"
-        fi
-        exit 1
-    fi
-
-    $logger "logDebug" "validate sshKey"
-    if [ -z "$sshKey" ]; then
-        $logger "logError" "'ssh key' is required"
-        $logger "logInfo" "validateArgs"
-        $logger "logInfo" "${task}"
-        if [ "$printHeaderToScreen" == "true" ]; then
-            $utils "printFailedFooter"
-        fi
-        exit 1
-    fi
-
-    $logger "logDebug" "validate sshRun"
-    if [ -z "$sshRun" ]; then
-        $logger "logError" "'ssh run command' is required"
+    $logger "logDebug" "validate databaseDump"
+    if [ -z "$databaseDump" ]; then
+        $logger "logError" "'db dump' is required"
         $logger "logInfo" "validateArgs"
         $logger "logInfo" "${task}"
         if [ "$printHeaderToScreen" == "true" ]; then
@@ -178,17 +173,14 @@ _validateArgs() {
     $logger "logInfo" "validateArgs"
 }
 
-_deploySSH() {
-    $logger "logInfo" "deploy:ssh..."
+_restoreIt() {
+    $logger "logInfo" "docker-exec:mysql-restore..."
 
-    $logger "logDebug" "ssh => ${sshUser}@${sshDomain}"
-    $logger "logDebug" "run: ${sshRun} '${projectVersion}' && exit"
+    docker exec -i $containerName sh -c "exec mysql -u${databaseUser} -p${databasePassword} ${databaseName}" <$databaseDump
 
-    ssh -t -i $sshKey $sshUser@$sshDomain "${sshRun} '${projectVersion}' && exit"
-
-    $logger "logInfo" "deploy:ssh"
+    $logger "logInfo" "docker-exec:mysql-restore"
 }
 
 ## run
 
-main "$1"
+main "$1" "$2"
