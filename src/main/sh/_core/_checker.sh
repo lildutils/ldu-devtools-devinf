@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## import core scripts
+## imports
 
 logger=${PWD}/DEV-INF/_logger.sh
 
@@ -9,8 +9,23 @@ logger=${PWD}/DEV-INF/_logger.sh
 main() {
     command=$1
 
+    if [ "$command" == "checkAngularCliInstalled" ]; then
+        _checkAngularCliInstalled
+        exit 0
+    fi
+
     if [ "$command" == "checkConfigsJsonExists" ]; then
         _checkFileExists "${PWD}/DEV-INF/configs.json"
+        exit 0
+    fi
+
+    if [ "$command" == "checkPackageJsonExists" ]; then
+        _checkFileExists "${PWD}/package.json"
+        exit 0
+    fi
+
+    if [ "$command" == "checkDockerfileExists" ]; then
+        _checkFileExists "${PWD}/Dockerfile"
         exit 0
     fi
 
@@ -39,8 +54,8 @@ main() {
         exit 0
     fi
 
-    if [ "$command" == "checkPackageJsonExists" ]; then
-        _checkFileExists "${PWD}/package.json"
+    if [ "$command" == "checkOpenSSHInstalled" ]; then
+        _checkOpenSSHInstalled
         exit 0
     fi
 
@@ -53,6 +68,15 @@ main() {
 }
 
 ## tasks
+
+_checkAngularCliInstalled() {
+    ngVersion=$(./node_modules/.bin/ng v)
+
+    if [ -z "$ngVersion" ]; then
+        $logger "logError" "'ng' is not installed yet, please install it first"
+        exit 1
+    fi
+}
 
 _checkDockerInstalled() {
     dockerVersion=$(docker --version)
@@ -76,7 +100,7 @@ _checkGradlewInstalled() {
     gradlewVersion=$(${PWD}/gradlew -v)
 
     if [ -z "$gradlewVersion" ]; then
-        $logger "logError" "'gradlew' is not installed yet, please install it first"
+        $logger "logError" "'${PWD}/gradlew' is not installed yet, please install it first"
         exit 1
     fi
 }
@@ -104,6 +128,15 @@ _checkNpmInstalled() {
 
     if [ -z "$npmVersion" ]; then
         $logger "logError" "'npm' is not installed yet, please install it first"
+        exit 1
+    fi
+}
+
+_checkOpenSSHInstalled() {
+    sshVersion=$(ssh)
+
+    if [ -z "$npmVersion" ]; then
+        $logger "logError" "'ssh' is not installed yet, please install it first"
         exit 1
     fi
 }

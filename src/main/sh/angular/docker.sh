@@ -13,24 +13,19 @@ zipit=${PWD}/DEV-INF/_zipit.sh
 main() {
     _init "$1"
     _validate
-    _deploy
+    _dockerIt
     _exit
 }
 
 ## tasks
 
 _init() {
-    task=deploy
+    task=dockerIt
 
     _healthCheck
 
     projectName=$(node -p -e "require('${PWD}/DEV-INF/configs.json').project.name")
     packageVersion=$(node -p -e "require('${PWD}/package.json').version")
-
-    sshUser=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshUser")
-    sshDomain=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshDomain")
-    sshKey=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshKey")
-    sshRun=$(node -p -e "require('${PWD}/DEV-INF/configs.json').remote.sshRun")
 
     projectVersion=$1
 
@@ -57,7 +52,12 @@ _healthCheck() {
         exit 1
     fi
 
-    $checker checkOpenSSHInstalled
+    $checker checkDockerInstalled
+    if [ "$?" == "1" ]; then
+        exit 1
+    fi
+
+    $checker checkDockerfileExists
     if [ "$?" == "1" ]; then
         exit 1
     fi
@@ -67,8 +67,8 @@ _validate() {
     _validateArgs
 }
 
-_deploy() {
-    _deploySSH
+_dockerIt() {
+    _dockerDist
 }
 
 _exit() {
@@ -98,7 +98,7 @@ _printHeader() {
 _printFooter() {
     printHeaderToScreen=$(node -p -e "require('${PWD}/DEV-INF/configs.json').screen.printHeader")
     if [ "$printHeaderToScreen" == "true" ]; then
-        $utils "printSuccessFooter" "${projectName}-${projectVersion}"
+        $utils "printSuccessFooter" "${dockerRepositoryURL}/${dockerHub}/tags?name=${projectName}-${projectVersion}"
     fi
 }
 
@@ -142,42 +142,9 @@ _validateArgs() {
         fi
     fi
 
-    $logger "logDebug" "validate sshUser"
-    if [ -z "$sshUser" ]; then
-        $logger "logError" "'ssh user' is required"
-        $logger "logInfo" "validateArgs"
-        $logger "logInfo" "${task}"
-        if [ "$printHeaderToScreen" == "true" ]; then
-            $utils "printFailedFooter"
-        fi
-        exit 1
-    fi
-
-    $logger "logDebug" "validate sshDomain"
-    if [ -z "$sshDomain" ]; then
-        $logger "logError" "'ssh domain' is required"
-        $logger "logInfo" "validateArgs"
-        $logger "logInfo" "${task}"
-        if [ "$printHeaderToScreen" == "true" ]; then
-            $utils "printFailedFooter"
-        fi
-        exit 1
-    fi
-
-    $logger "logDebug" "validate sshKey"
-    if [ -z "$sshKey" ]; then
-        $logger "logError" "'ssh key' is required"
-        $logger "logInfo" "validateArgs"
-        $logger "logInfo" "${task}"
-        if [ "$printHeaderToScreen" == "true" ]; then
-            $utils "printFailedFooter"
-        fi
-        exit 1
-    fi
-
-    $logger "logDebug" "validate sshRun"
-    if [ -z "$sshRun" ]; then
-        $logger "logError" "'ssh run command' is required"
+    $logger "logDebug" "validate dockerRootURL"
+    if [ -z "$dockerRootURL" ]; then
+        $logger "logError" "'docker root URL' is required"
         $logger "logInfo" "validateArgs"
         $logger "logInfo" "${task}"
         if [ "$printHeaderToScreen" == "true" ]; then
@@ -189,15 +156,24 @@ _validateArgs() {
     $logger "logInfo" "validateArgs"
 }
 
-_deploySSH() {
-    $logger "logInfo" "deploy:ssh..."
+_dockerDist() {
+    dockerRootURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').dockerHub.rootURL")
+    dockerRepositoryURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').dockerHub.repositoryURL")
+    dockerRegistryURL=$(node -p -e "require('${PWD}/DEV-INF/configs.json').dockerHub.registryURL")
+    dockerUsername=$(node -p -e "require('${PWD}/DEV-INF/configs.json').dockerHub.username")
+    dockerUserpass=$(node -p -e "require('${PWD}/DEV-INF/configs.json').dockerHub.password")
+    dockerHub=$(echo ${dockerRepositoryURL}/${dockerRegistryURL})
 
-    $logger "logDebug" "ssh => ${sshUser}@${sshDomain}"
-    $logger "logDebug" "run: ${sshRun} '${projectVersion}' && exit"
+    $logger "logInfo" "dockerIt..."
 
-    ssh -t -i $sshKey $sshUser@$sshDomain "${sshRun} '${projectVersion}' && exit"
+    $logger "logDebug" "registry: ${dockerHub}"
+    $logger "logDebug" "project: ${projectName}-${projectVersion}"
 
-    $logger "logInfo" "deploy:ssh"
+    $dockerit "login" "-u ${dockerUsername} -p ${dockerUserpass}"
+    $dockerit "build" "${dockerHub}:${projectName}-${projectVersion}"
+    $dockerit "push" "${dockerHub}:${projectName}-${projectVersion}"
+
+    $logger "logInfo" "dockerIt"
 }
 
 ## run

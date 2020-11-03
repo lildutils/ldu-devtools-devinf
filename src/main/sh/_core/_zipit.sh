@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## import core scripts
+## imports
 
 logger=${PWD}/DEV-INF/_logger.sh
 
@@ -8,27 +8,36 @@ logger=${PWD}/DEV-INF/_logger.sh
 
 main() {
     file=$1
+
+    # configs
+
+    distFolder=$(node -p -e "require('${PWD}/DEV-INF/configs.json').project.distFolder")
+    zipFolder=$(node -p -e "require('${PWD}/DEV-INF/configs.json').project.zip.outputFolder")
+    zipInSilent=$(node -p -e "require('${PWD}/DEV-INF/configs.json').project.zip.silentMode")
+
+    # validate
+
     if [ -z "$file" ]; then
         $logger "logError" "'file' is required"
         exit 1
     fi
 
-    distFolder=$(node -p -e "require('${PWD}/DEV-INF/configs.json').distFolder")
     if [ ! -d "$distFolder" ]; then
         $logger "logError" "'distFolder' is required"
         exit 1
     fi
 
-    zipFolder=$(node -p -e "require('${PWD}/DEV-INF/configs.json').zipFolder")
     if [ ! -d "$zipFolder" ]; then
         $logger "logError" "'zipFolder' is required"
         exit 1
     fi
 
-    $logger "logDebug" "zip files --recursive in ${PWD}/${distFolder}/${file}.zip"
-    cd "$distFolder"
+    # process
 
-    zipInSilent=$(node -p -e "require('${PWD}/DEV-INF/configs.json').zipInSilent")
+    $logger "logDebug" "zipping..."
+
+    $logger "logDebug" "create zip ${PWD}/${distFolder}/${file}.zip"
+    cd "$distFolder"
     if [ "$zipInSilent" == "true" ]; then
         zip -rq "${file}.zip" .
     else
@@ -36,11 +45,13 @@ main() {
     fi
     cd ..
 
-    $logger "logDebug" "copy zip file from ${PWD}/${distFolder}/ to ${zipFolder}/"
+    $logger "logDebug" "copy zip ${PWD}/${distFolder} --> ${zipFolder}"
     cp "${distFolder}/${file}.zip" "${zipFolder}/"
 
-    $logger "logDebug" "clean ${distFolder}/"
+    $logger "logDebug" "clean zip ${distFolder}/"
     rm "${distFolder}/${file}.zip"
+
+    $logger "logDebug" "zipped"
 }
 
 ## run
