@@ -1,0 +1,80 @@
+{
+    "__devops.configs__": "",
+    "backend": {
+        "networkName": "need-to-change",
+        "restapi": {
+            "containerName": "need-to-change",
+            "redirectPortNumber": -1,
+            "dockerPortNumber": -1
+        }
+    },
+    "frontend": {
+        "networkName": "need-to-change",
+        "comingsoon": {
+            "containerName": "need-to-change",
+            "defaultRegion": "hu",
+            "redirectPortNumber": -1,
+            "dockerPortNumber": -1
+        },
+        "landing": {
+            "containerName": "need-to-change",
+            "defaultRegion": "hu",
+            "redirectPortNumber": -1,
+            "dockerPortNumber": -1
+        },
+        "admin": {
+            "containerName": "need-to-change",
+            "defaultRegion": "hu",
+            "redirectPortNumber": -1,
+            "dockerPortNumber": -1
+        },
+        "my-profule": {
+            "containerName": "need-to-change",
+            "defaultRegion": "hu",
+            "redirectPortNumber": -1,
+            "dockerPortNumber": -1
+        },
+        "users": {
+            "containerName": "need-to-change",
+            "defaultRegion": "hu",
+            "redirectPortNumber": -1,
+            "dockerPortNumber": -1
+        },
+        "webshop": {
+            "containerName": "need-to-change",
+            "defaultRegion": "hu",
+            "redirectPortNumber": -1,
+            "dockerPortNumber": -1
+        },
+        "regions": [
+            "hu",
+            "en",
+            "de",
+            "..."
+        ]
+    },
+    "__dockerHub.configs__": "",
+    "dockerHub": {
+        "username": "needtochange",
+        "password": "n33dT0Ch4nGe%",
+        "rootURL": "https://www.docker.com",
+        "repositoryURL": "https://hub.docker.com/repository/docker",
+        "registryURL": "need-to-change"
+    },
+    "__screen.configs__": "",
+    "screen": {
+        "headerTitle": "DevOps/Domain:Nginx @ DEV-INF Tools",
+        "clearBeforeRun": "false",
+        "printHeader": "false"
+    },
+    "__logger.configs__": "",
+    "logger": {
+        "logLevel": "DEBUG",
+        "logLevels": [
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR"
+        ]
+    }
+}

@@ -13,7 +13,7 @@ zipit=${PWD}/DEV-INF/_zipit.sh
 main() {
     _init "$1" "$2"
     _validate
-    _build
+    _run
     _exit
 }
 
@@ -110,7 +110,7 @@ _validate() {
     _validateArgs
 }
 
-_build() {
+_run() {
     _codeAnalyze
 
     _cleanDist

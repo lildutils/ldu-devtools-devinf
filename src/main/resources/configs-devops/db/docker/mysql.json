@@ -1,0 +1,35 @@
+{
+    "__devops.configs__": "",
+    "database": {
+        "networkName": "need-to-change",
+        "connection": {
+            "databaseName": "need_to_change",
+            "username": "needtochange",
+            "password": "n33dT0Ch4nGe%"
+        },
+        "server": {
+            "containerName": "need-to-change",
+            "composeFile": "/need/to/change/docker-compose.yml",
+            "backupFolder": "/need/to/change",
+            "dataFolder": "/need/to/change",
+            "dockerPortNumber": -1,
+            "redirectPortNumber": -1
+        }
+    },
+    "__screen.configs__": "",
+    "screen": {
+        "headerTitle": "DevOps/Database:MySQL @ DEV-INF Tools",
+        "clearBeforeRun": "false",
+        "printHeader": "false"
+    },
+    "__logger.configs__": "",
+    "logger": {
+        "logLevel": "DEBUG",
+        "logLevels": [
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR"
+        ]
+    }
+}
