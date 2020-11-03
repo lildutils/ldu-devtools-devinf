@@ -28,6 +28,7 @@ _init() {
     projectVersion=$(node -p -e "require('${PWD}/package.json').version")
 
     baseHref=$(node -p -e "require('${PWD}/DEV-INF/configs.json').ngBuild.baseHref")
+
     confFile=$(node -p -e "require('${PWD}/DEV-INF/configs.json').ngBuild.confFile")
 
     defaultProfile=$(node -p -e "require('${PWD}/DEV-INF/configs.json').ngBuild.defaultProfile")
@@ -209,7 +210,6 @@ _validateArgs() {
 
     $logger "logDebug" "validate activeProfile"
     if [ -z "$activeProfile" ]; then
-        $logger "logDebug" "activating default profile"
         activeProfile=$defaultProfile
 
         if [ -z "$activeProfile" ]; then
@@ -269,23 +269,33 @@ _publishDist() {
     $logger "logInfo" "npmPublish..."
 
     $logger "logDebug" "registry (public): ${npmjsRegistryURL}"
-    cd dist/
     $logger "logDebug" "project: ${projectName}-${projectVersion}"
+
+    cd dist/
     npm publish --access public
     cd ..
 
-    $logger "logDebug" " ${npmjsPackagesRootURL}/package/${projectBuildName}"
+    $logger "logDebug" " ${npmjsRootURL}/package/${projectName}"
 
     $logger "logInfo" "npmPublish"
 }
 
 _copyFiles() {
     confFolder=$(node -p -e "require('${PWD}/DEV-INF/configs.json').project.confFolder")
+    confFileType=$(node -p -e "require('${PWD}/DEV-INF/configs.json').project.confFileType")
 
     $logger "logInfo" "copyFiles..."
 
-    if [ -f "$confFile" ]; then
-        $utils "copyFile" "$PWD/$confFile" "$PWD/$confFolder/nginx.conf"
+    if [ "$confFileType" == "nginx" ]; then
+        if [ -f "$confFile" ]; then
+            $utils "copyFile" "$PWD/$confFile" "$PWD/$confFolder/nginx.conf"
+        fi
+    fi
+
+    if [ "$confFileType" == "htaccess" ]; then
+        if [ -f "$confFile" ]; then
+            $utils "copyFile" "$PWD/$confFile" "$PWD/$confFolder/.htaccess"
+        fi
     fi
 
     $logger "logInfo" "copyFiles"
